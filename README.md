@@ -1,8 +1,9 @@
-# ReCoal GUI Testnet Wallet
+# ReCoal GUI Wallet
 
 This is a fork of the **Sumokoin GUI Wallet**: https://github.com/sumoprojects/SumoGUIWallet
-It is changed to be compatible with ReCoal.
+It is changed to be compatible with ReCoal.   
 
+![ReCoal GUI Wallet v0.2.1.1](https://preview.ibb.co/my4HDd/Wallet.jpg)
 
 1. Install dependencies (with Python 2.7):
 
