@@ -213,31 +213,36 @@ class Hub(QObject):
                 wallet_log_path = os.path.join(wallet_dir_path, 'recoal-wallet-cli.log')
                 resources_path = self.app.property("ResPath")
                 if not mnemonic_seed: # i.e. create new wallet
-                    self.wallet_cli_manager = WalletCliManager(resources_path, \
-                                                wallet_filepath, wallet_log_path)
-                    self.wallet_cli_manager.start()
-                    self.app_process_events(1)
-                    self.wallet_cli_manager.send_command(wallet_password)
-                    self.app_process_events(0.5)
-                    self.wallet_cli_manager.send_command(mnemonic_seed_language)
-                    self.app_process_events(0.5)
-                    self.wallet_cli_manager.send_command("exit")
+					self.wallet_cli_manager = WalletCliManager(resources_path, \
+												wallet_filepath, wallet_log_path)
+					self.wallet_cli_manager.start()
+					self.app_process_events(1)
+					self.wallet_cli_manager.send_command(wallet_password)
+					self.app_process_events(0.5)
+					self.wallet_cli_manager.send_command(mnemonic_seed_language)
+					self.app_process_events(0.5)
+					self.wallet_cli_manager.send_command("exit")
+					self.app_process_events(5)
                 else: # restore wallet
-                    self.wallet_cli_manager = WalletCliManager(resources_path, \
+					self.wallet_cli_manager = WalletCliManager(resources_path, \
                                                 wallet_filepath, wallet_log_path, True)
-                    self.wallet_cli_manager.start()
-                    self.app_process_events(1)
-                    self.wallet_cli_manager.send_command(wallet_filepath)
-                    self.app_process_events(0.5)
-                    self.wallet_cli_manager.send_command(mnemonic_seed)
-                    self.app_process_events(0.5)
-                    self.wallet_cli_manager.send_command(wallet_password)
-                    self.app_process_events(0.5)
-                    self.wallet_cli_manager.send_command("0") # rescan from block height 0
-                    self.app_process_events(0.5)
-                    self.wallet_cli_manager.send_command("exit")
-                    
-                self.app_process_events(2)
+					self.wallet_cli_manager.start()
+					self.app_process_events(2)
+					self.wallet_cli_manager.send_command(wallet_filepath)
+					self.app_process_events(0.8)
+					self.wallet_cli_manager.send_command(mnemonic_seed)
+					self.app_process_events(0.8)
+					self.wallet_cli_manager.send_command("")
+					self.app_process_events(0.8)
+					self.wallet_cli_manager.send_command(wallet_password)
+					self.app_process_events(0.8)
+					self.wallet_cli_manager.send_command(wallet_password)
+					self.app_process_events(2.5)
+					self.wallet_cli_manager.send_command("0") # rescan from block height 0
+					self.app_process_events(1.5)
+					self.wallet_cli_manager.send_command("exit")
+					self.app_process_events(5)
+					
         except Exception, err:
             log(str(err), LEVEL_ERROR)
             last_wallet_error = self.wallet_cli_manager.last_error
@@ -609,12 +614,17 @@ class Hub(QObject):
         self.on_restart_daemon_completed_event.emit()
         
     
-    @Slot()
-    def view_daemon_log(self):
-        log_file = os.path.join(DATA_DIR, 'logs', "electroneumd.log")
-        log_dialog = LogViewer(parent=self.ui, log_file=log_file)
-        log_dialog.load_log()
-        
+	@Slot()
+	def view_daemon_log(self):
+		log_file = os.path.join(DATA_DIR, 'logs', "recoald.log")
+		log_dialog = LogViewer(parent=self.ui, log_file=log_file)
+		log_dialog.load_log()
+		
+	@Slot(bool)
+	def change_minimize_to_tray(self, status):
+		self.ui.close_to_system_tray = status
+		self.ui.app_settings.settings['application']['minimize_to_tray'] = status
+		self.ui.app_settings.save()
                 
     def update_daemon_status(self, status):
         self.on_daemon_update_status_event.emit(status)

@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['wallet.py'],
-             pathex=['E:\\RecoalGUIWallet'],
+             pathex=['E:\\ReCoal\\New folder'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -26,4 +26,4 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           runtime_tmpdir=None,
-          console=False , icon='E:\\RecoalGUIWallet\\Resources\\icons\\recoal_icon.ico')
+          console=False , icon='E:\\ReCoal\\New folder\\Resources\\icons\\recoal_icon.ico')

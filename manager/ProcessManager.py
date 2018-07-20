@@ -85,7 +85,7 @@ class ProcessManager(Thread):
 
 
 class ElectroneumdManager(ProcessManager):
-    def __init__(self, resources_path, log_level=0, block_sync_size=10):
+    def __init__(self, resources_path, log_level=0, block_sync_size=30):
         resources_path = resources_path.replace(' ' ,'__SPACE_REPLACE__')
         proc_args = u'%s/bin/recoald --log-level %d --block-sync-size %d --rpc-bind-port %d' % (resources_path, log_level, block_sync_size, RPC_DAEMON_PORT)
         ProcessManager.__init__(self, proc_args, "recoald")
@@ -121,7 +121,7 @@ class WalletCliManager(ProcessManager):
             wallet_args = u'%s/bin/recoal-wallet-cli --generate-new-wallet=%s --log-file=%s --create-address-file' \
                                                 % (resources_path, wallet_file_path, wallet_log_path)
         else:
-            wallet_args = u'%s/bin/recoal-wallet-cli --log-file=%s --restore-deterministic-wallet' \
+            wallet_args = u'%s/bin/recoal-wallet-cli --log-file=%s --restore-deterministic-wallet --create-address-file' \
                                                 % (resources_path, wallet_log_path)
         ProcessManager.__init__(self, wallet_args, "recoal-wallet-cli")
         self.ready = Event()

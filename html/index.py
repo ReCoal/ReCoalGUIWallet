@@ -28,6 +28,7 @@ html ="""
                     $('#daemon_log_level_' + log_level).prop('checked', true);
                     var block_sync_size = app_settings['daemon']['block_sync_size'];
                     $('#block_sync_size_' + block_sync_size).prop('checked', true);
+					$('#minimize_to_tray_chk').prop('checked', app_settings['application']['minimize_to_tray']);
                 });
                 
                 app_hub.on_main_wallet_ui_reset_event.connect(function(){
@@ -161,7 +162,7 @@ html ="""
                     if(tx.hasOwnProperty('destinations')){
                         var destinations = tx['destinations'];
                         for(var i=0; i < destinations.length; i++ ){
-                            dest_html += '<li>Amount: <span class="tx-list tx-amount tx-' + tx['status'] + '">' + printMoney(destinations[i]['amount']/100) + "</span>Address: <strong>" + destinations[i]['address'] + "</strong></li>";
+                            dest_html += '<li>Amount: <span class="tx-list tx-amount tx-' + tx['status'] + '">' + printMoney(destinations[i]['amount']/1000000000000) + "</span>Address: <strong>" + destinations[i]['address'] + "</strong></li>";
                         }
                     }
                     
@@ -174,8 +175,8 @@ html ="""
                                                             'tx_fa_icon': tx['direction'] == "in" ? "mail-forward" : "reply",
                                                             'tx_id': tx['txid'],
                                                             'tx_payment_id': tx['payment_id'], 
-                                                            'tx_amount': printMoney(tx['amount']/100.),
-                                                            'tx_fee': printMoney(tx['fee']/100.),
+                                                            'tx_amount': printMoney(tx['amount']/1000000000000),
+                                                            'tx_fee': printMoney(tx['fee'].toFixed(8)/1000000000000),
                                                             'tx_fee_hide': tx['fee'] > 0 ? '' : 'tx-fee-hide',
                                                             'tx_date': dateConverter(tx['timestamp']),
                                                             'tx_time': timeConverter(tx['timestamp']),
@@ -213,7 +214,7 @@ html ="""
                             'tx_id': tx['txid'],
                             'tx_id_short': tx['txid'].substring(0, 26) + "...",
                             'tx_payment_id': tx['payment_id'].substring(0, 16),
-                            'tx_amount': printMoney(tx['amount']/100.),
+                            'tx_amount': printMoney(tx['amount']/1000000000000),
                             'tx_height': tx['height'],
                             'cls_in_out': tx['status']
                         });
@@ -343,8 +344,8 @@ html ="""
                                                             'tx_fa_icon': tx['direction'] == "in" ? "mail-forward" : "reply",
                                                             'tx_id': tx['txid'],
                                                             'tx_payment_id': tx['payment_id'], 
-                                                            'tx_amount': printMoney(tx['amount']/100.),
-                                                            'tx_fee': printMoney(tx['fee']/100.),
+                                                            'tx_amount': printMoney(tx['amount']/1000000000000),
+                                                            'tx_fee': printMoney(tx['fee']/1000000000000),
                                                             'tx_fee_hide': tx['fee'] > 0 ? '' : 'tx-fee-hide',
                                                             'tx_date': dateConverter(tx['timestamp']),
                                                             'tx_time': timeConverter(tx['timestamp']),
@@ -447,7 +448,7 @@ html ="""
                     errors.push("Address is required!");
                     $('#send_address').parent().addClass('has-error');
                 }
-                else if(!(address.substr(0, 2) === "Se" && address.length === 97) && !(address.substr(0, 3) === "SEi" && address.length === 109)){
+                else if(!(address.substr(0, 2) === "co" && address.length === 97) && !(address.substr(0, 3) === "ci" && address.length === 97)){
                     errors.push("Address is not valid, please try again! "+address.length);
                     $('#send_address').parent().addClass('has-error');
                 }
@@ -709,7 +710,7 @@ html ="""
 	    }
         </script>
     </head>
-    <body style="background:url(./../Resources/www/images/recoal-big-tp.png)">
+    <body>
         <div class="container">
             <ul class="nav nav-tabs">
 			  <li class="active"><a data-toggle="tab" href="#balance_tab"><i class="fa fa-money"></i> Wallet</a></li>
@@ -768,8 +769,8 @@ html ="""
                                 <h5><font color="#7646e3"><i class="fa fa-fw fa-unlock" style="color:#7646e3;"></i> Unlocked Balance:</font></h5>
                             </div>
                             <div class="col-xs-6" style="text-align:right">
-                                <h5><span id="balance">0.00</span> <small>RECL</small> <span class="syncing"> (syncing)</span></h5>
-                                <h5><span id="unlocked_balance">0.00</span> <small>RECL</small> <span class="syncing"> (syncing)</span></h5>
+                                <h5><span id="balance">0.000000</span> <small>RECL</small> <span class="syncing"> (syncing)</span></h5>
+                                <h5><span id="unlocked_balance">0.000000</span> <small>RECL</small> <span class="syncing"> (syncing)</span></h5>
                             </div>
                             <div class="col-xs-12" style="margin-top: 10px">
                                 <button id="btn_rescan_spent" type="button" class="btn btn-primary" onclick="rescan_spent()" disabled><i class="fa fa-sort-amount-desc"></i> Rescan Spent</button>
@@ -832,9 +833,7 @@ html ="""
                                     <label for="send_mixins" class="col-xs-4 control-label">Privacy <sup>1</sup></label>
                                     <div class="col-xs-8">
                                         <select id="send_mixins" class="form-control">
-                                          <option value="0">0 mixins</option>
-                                          <option value="2">2 mixins</option>
-                                          <option value="4" selected>4 mixins</option>
+                                          <option value="6" selected>6 mixins</option>
                                           <option value="8">8 mixins</option>
                                           <option value="10">10 mixins</option>
                                           <option value="12">12 mixins</option>

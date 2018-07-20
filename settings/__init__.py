@@ -14,8 +14,8 @@ import logging
 from utils.common import getHomeDir, makeDir
 
 USER_AGENT = "ReCoal GUI Mainnet Wallet"
-APP_NAME = "ReCoal GUI Wallet v0.2.1"
-VERSION = [0, 2, 1]
+APP_NAME = "ReCoal GUI Wallet v0.2.1.1"
+VERSION = [0, 2, 1, 1]
 
 
 _data_dir = makeDir(os.path.join(os.getcwd(), 'data'))
